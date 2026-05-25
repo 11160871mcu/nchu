@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學務資訊系統 - Student Affairs Information</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(90deg, #00b4d8, #0077b6);
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  .header-en { font-size: 13px; font-weight: normal; letter-spacing: 1px; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: #f0f0f0;
+    border-top: 1px solid #ddd;
+    padding: 18px 0 0 0;
+    margin-top: auto;
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+  }
+  .footer-bar {
+    background: #111;
+    color: #fff;
+    padding: 8px;
+    font-size: 12px;
+    margin-top: 14px;
+  }
+  .footer-row { display: flex; justify-content: space-around; padding-bottom: 12px; }
+
+  /* ===== MAIN CONTENT ===== */
+  .page { display: none; flex: 1; }
+  .page.active { display: flex; flex-direction: column; flex: 1; }
+
+  /* ===== LOGIN PAGE ===== */
+  #page-login {
+    background-image: url('images/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+  }
+  .login-overlay {
+    background-color: rgba(255, 255, 255, 0.85);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+  }
+  .login-card {
+    max-width: 400px;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    padding: 28px 36px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .login-card h2 { color: #0077b6; font-size: 22px; margin-bottom: 4px; }
+  .login-card h3 { color: #333; font-size: 14px; margin-bottom: 18px; }
+  .btn-portal {
+    display: block; width: 100%;
+    background: #2d6a4f; color: white;
+    border: none; border-radius: 5px;
+    padding: 10px; font-size: 13px;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-portal:hover { background: #1b4332; }
+  .login-card2 h2 { color: #0077b6; font-size: 22px; margin-bottom: 4px; }
+  .login-card2 h3 { color: #333; font-size: 14px; }
+  .alumni-note { color: #c00; font-size: 13px; margin-bottom: 14px; font-weight: bold; }
+  .login-input {
+    width: 100%; padding: 8px 12px;
+    border: 1px solid #ccc; border-radius: 4px;
+    font-size: 14px; margin-bottom: 10px;
+  }
+  .captcha-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; padding: 8px 10px; }
+  .captcha-ok { color: green; font-size: 13px; }
+  .cf-logo { font-size: 10px; color: #777; text-align: right; }
+  .btn-login {
+    width: 100%; background: #0077b6; color: white;
+    border: none; border-radius: 4px; padding: 10px;
+    font-size: 14px; cursor: pointer;
+  }
+  .btn-login:hover { background: #005f8e; }
+  .err-msg { color: red; font-size: 12px; margin-top: 6px; display: none; }
+
+  /* ===== INNER PAGES ===== */
+  .inner { flex: 1; padding: 30px 40px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  h1.page-title { font-size: 20px; margin-bottom: 20px; color: #222; width: 100%; text-align: center; }
+
+  /* page 2 - enter button */
+  .btn-enter {
+    background: #0077b6; color: white;
+    border: none; border-radius: 4px; padding: 8px 22px;
+    font-size: 14px; cursor: pointer;
+  }
+  .btn-enter:hover { background: #005f8e; }
+
+  /* notices page */
+  .notice-list { font-size: 14px; line-height: 2; color: #333; list-style: decimal; padding-left: 20px; max-width: 860px; width: 100%; text-align: left; }
+  .notice-list li { margin-bottom: 6px; }
+  .notice-list a { color: #0077b6; }
+  .checkbox-row { margin-top: 24px; font-size: 14px; text-align: center; }
+  .btn-next {
+    display: block; margin: 18px auto 0;
+    background: #0077b6; color: white;
+    border: none; border-radius: 4px; padding: 9px 32px;
+    font-size: 14px; cursor: pointer;
+  }
+  .btn-next:hover { background: #005f8e; }
+
+  /* schedule table */
+  .sched-table { width: 100%; max-width: 900px; border-collapse: collapse; font-size: 13px; text-align: left; }
+  .sched-table th, .sched-table td { border: 1px solid #ccc; padding: 8px 10px; vertical-align: top; }
+  .sched-table th { background: #e9f5fb; font-weight: bold; }
+
+  /* dorm rules page */
+  .rules-center { text-align: center; margin-top: 20px; }
+  .rules-center p { font-size: 16px; margin-bottom: 10px; }
+  .rules-center a { color: #0077b6; }
+  .btn-agree { background: #0077b6; color: white; border: none; border-radius: 4px; padding: 9px 28px; font-size: 14px; cursor: pointer; margin: 8px; }
+  .btn-disagree { background: #c0392b; color: white; border: none; border-radius: 4px; padding: 9px 28px; font-size: 14px; cursor: pointer; margin: 8px; }
+
+  /* fee table */
+  .fee-table { border-collapse: collapse; font-size: 14px; }
+  .fee-table th, .fee-table td { border: 1px solid #ccc; padding: 10px 20px; text-align: center; }
+  .fee-table th { background: #f5f5f5; }
+  .fee-note { font-size: 13px; color: #555; margin-top: 14px; text-align: center; }
+
+  /* summary page */
+  .summary-table { width: 100%; max-width: 700px; border-collapse: collapse; font-size: 15px; }
+  .summary-table td { border: 1px solid #ccc; padding: 12px 20px; text-align: center; }
+  .summary-table td:first-child { background: #f5f5f5; width: 30px; }
+  .reminder-box { border: 1px solid #ccc; border-radius: 4px; padding: 18px 22px; margin-top: 14px; width: 100%; max-width: 700px; font-size: 14px; line-height: 1.9; text-align: left; }
+  .reminder-box strong { font-size: 15px; display: block; margin-bottom: 8px; }
+
+  .success-msg { text-align: center; padding: 40px; font-size: 18px; color: #2d6a4f; }
+</style>
+</head>
+<body>
+
+<!-- ===== PAGE 1: LOGIN ===== -->
+<div id="page-login" class="page active">
+  <div class="login-overlay">
+  <div class="header" style="position:absolute;top:0;left:0;right:0;z-index:2;">
+    學務資訊系統<br><span class="header-en">Student Affairs Information</span>
+  </div>
+
+  <!-- Current Students -->
+  <div class="login-card">
+    <h2>在學生 或 教職員工</h2>
+    <h3>Current Students or Faculty</h3>
+    <a href="https://ccidp.nchu.edu.tw/login?service=https%3A%2F%2Fcportal.nchu.edu.tw%2Fcas_login%2Fm_stua%3Fv_www%3Dm_stu_priv" target="_blank" class="btn-portal">使用興大入口登入<br>Login with NCHU Portal</a>
+  </div>
+
+  <!-- Alumni / Graduate login -->
+  <div class="login-card login-card2">
+    <h2>畢業生、校友 登入</h2>
+    <h3>Graduates and Alumni Login</h3>
+    <p class="alumni-note">碩新學生請由畢業生、校友登入</p>
+    <input class="login-input" id="inp-id" type="text" placeholder="學號 / Student ID">
+    <input class="login-input" id="inp-pw" type="password" placeholder="密碼 / Password">
+    <div class="captcha-row">
+      <span class="captcha-ok">✅ 成功!</span>
+      <div class="cf-logo">CLOUDFLARE<br>🔒 隱私・品味</div>
+    </div>
+    <button class="btn-login" onclick="doLogin()">登入/ Login</button>
+    <div class="err-msg" id="err-msg">學號或密碼錯誤，請重新輸入。</div>
+  </div>
+
+  <div style="position:absolute;bottom:36px;left:0;right:0;text-align:center;font-size:12px;color:#444;z-index:2;">
+    學生事務處 | Student Affairs Information<br>
+    40227 台中市興大路145號 | No. 145, Xingda Road, Taichung City 40227<br>
+    電話 / TEL：(04) 2284-0223
+  </div>
+  <div style="position:absolute;bottom:36px;left:0;right:0;text-align:center;font-size:12px;color:#444;z-index:2;">
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;background:#111;color:#fff;text-align:center;font-size:12px;padding:6px;z-index:2;">
+    2017@學生事務處 | Student Affairs Information
+  </div>
+  </div><!-- end login-overlay -->
+</div>
+
+<!-- ===== PAGE 2: ENTER ===== -->
+<div id="page-enter" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">宿舍床位抽籤/申請</h1>
+    <button class="btn-enter" onclick="goTo('page-notices')">進入</button>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 3: NOTICES ===== -->
+<div id="page-notices" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">宿舍床位抽籤/申請</h1>
+    <ol class="notice-list">
+      <li>循環經濟學院學生限申請南投校區宿舍床位，不得申請台中校區宿舍，詳見南投校區學生宿舍申請公告。</li>
+      <li>碩士新生請以學號/密碼(身分證字母首碼大小寫+身分證末四碼+出生月末四碼，共 10 碼)登入即可進行床位申請及抽籤結果查詢。</li>
+      <li>床位一經分配即為一學年(含寒假，不含暑假)，確認床位後欲放棄床位者最遲應於結果公告終止日後10日內【6月15日(含)下午5點前】辦理放棄床位手續(敬請繳交放棄床位聲明書及身份證件影本)至各學生宿舍服務中心辦理。</li>
+      <li>未於期限內放棄床位者視為確定住宿，並產生住宿相關費用，隨附於學雜費單中繳納，不得異議若逾上述期限放棄床位者，將依本校住宿輔導辦法第14條扣繳費用。</li>
+      <li>床位抽籤申請登記結束後到之碩士新生、碩士在職專班新生、博士班新生，可申請學生宿舍空床位候補。詳情另參見研究所新生校本部床位候補申請公告。</li>
+      <li>申請退宿期限及未於期限內退宿之費用，依本校住宿輔導辦法第14條辦理，請務必先行詳閱。</li>
+      <li>宿舍相關資訊至住輔組網站(<a href="https://www.osa.nchu.edu.tw/osa/dorm/" target="_blank">https://www.osa.nchu.edu.tw/osa/dorm/</a>)參閱，入住訊息將公告住宿輔導組網站/最新消息，敬請留意。</li>
+      <li>有任何問題歡迎於上班時間來電：男宿服務中心電話：04-22840473；女宿服務中心電話 04-22840612；南投宿舍服務中心電話049-2317574或04-22873181轉分機159。</li>
+    </ol>
+    <div class="checkbox-row">
+      <label><input type="checkbox" id="chk-notices"> 我已閱讀並確認注意事項</label>
+    </div>
+    <button class="btn-next" onclick="requireCheck('chk-notices','page-schedule')">下一步</button>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 4: SCHEDULE ===== -->
+<div id="page-schedule" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">宿舍床位抽籤申請期程</h1>
+    <table class="sched-table">
+      <thead>
+        <tr><th>起訖時間</th><th>說明</th><th>辦理方式</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>115年05月25日(一)09:00至<br>115年05月29日(五)17:00</td>
+          <td>【床位抽籤申請】<br>研究所新生可於網上進行當日可上網進行抽籤申請<br>(後過適用名額學生宿舍公告，不需申請台中校園)</td>
+          <td>
+            台中校區：網路辦理<br>
+            進至 中興大學首頁→學務處→住宿輔導組→進士床位抽籤中請→學號→床位抽籤/申請進行辦理。請參次之。<br><br>
+            南投校區：人工辦理<br><br>
+            郵件：敬有性能 MAIL 向投校區新生床位申請由宿舍服務中心電話申請(床位請長位申請辦行)。請請不者。<br>
+            email: <a href="mailto:chnudormitory@dragon.nchu.edu.tw">chnudormitory@dragon.nchu.edu.tw</a><br>
+            特洽: 049-23175/4
+          </td>
+        </tr>
+        <tr>
+          <td>115年06月03日(三)13:30至<br>115年06月05日(五)17:00</td>
+          <td>【抽籤結果及床位確認】</td>
+          <td>
+            台中校區：網路辦理<br>
+            以通知「下業通報則已公開到已行115學生住宿住導是後效見是；在不是通知可以，若不通故看議請我下一床位確認示『未抽取』仍看校本位位抽籤申請通公告。」<br><br>
+            之抽籤結果另床位確認妥存。<br><br>
+            中興大學首頁→學務處→住宿輔導組→進士床位抽籤→學務資訊→一位位/確認住宿結在<br><br>
+            南投校區：人工辦理<br><br>
+            床位平分配後服務中心公告於住輔組網頁/最新消息；服務中心透過 e-mail 電話通知(每學生床位確認妥存，透過三天床位確認不者，之後申請的學生服務問題的 e-mail 解析：未如經驗回值通請求得可能日。)
+          </td>
+        </tr>
+        <tr>
+          <td>115年06月02日(三)13:30妨</td>
+          <td>
+            妥候辦理生床位申請(此妥位請不後後 地妥下 都應規)。<br>
+            追說：請守 請確認論後住宿在當中 統/清床位申請。<br>
+            指候生床位者後後安排保保後床位,也 若分配後床位確認後者。不得再向申請一般妥。
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="checkbox-row" style="margin-top:20px;">
+      <label><input type="checkbox" id="chk-schedule"> 已確認瞭解宿舍床位抽籤申請期程</label>
+    </div>
+    <button class="btn-next" onclick="requireCheck('chk-schedule','page-rules')">下一步</button>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 5: DORM RULES ===== -->
+<div id="page-rules" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">宿舍公約</h1>
+    <div class="rules-center">
+      <p>我已閱讀並同意：</p>
+      <p>住宿輔導辦法、女生宿舍公約</p>
+      <p><a href="https://www.osa.nchu.edu.tw/osa/dorm/rules.html" target="_blank">https://www.osa.nchu.edu.tw/osa/dorm/rules.html</a></p>
+      <div style="margin-top:20px;">
+        <button class="btn-agree" onclick="goTo('page-quiet')">同意</button><br>
+        <button class="btn-disagree" onclick="alert('您選擇不同意，無法繼續申請。')">不同意</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 6: QUIET FLOOR ===== -->
+<div id="page-quiet" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">寧靜樓層公約</h1>
+    <div class="rules-center">
+      <p>我已閱讀並同意：</p>
+      <p>寧靜樓層公約 <a href="https://www.osa.nchu.edu.tw/osa/dorm/quiet_dorm.html" target="_blank">https://www.osa.nchu.edu.tw/osa/dorm/quiet_dorm.html</a></p>
+      <div style="margin-top:20px;">
+        <button class="btn-agree" onclick="goTo('page-fees')">同意</button><br>
+        <button class="btn-disagree" onclick="alert('您選擇不同意，無法繼續申請。')">不同意</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 7: FEES ===== -->
+<div id="page-fees" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">宿舍床位抽籤/申請</h1>
+    <p style="font-size:14px;margin-bottom:12px;text-align:center;">女生宿舍宿費表：</p>
+    <table class="fee-table">
+      <thead>
+        <tr><th>學期/棟別</th><th>樸軒</th><th>華軒</th><th>怡軒</th><th>誠軒</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>上學期<br>(含寒宿)</td>
+          <td>11073</td><td>9995</td><td>10120</td><td>16352</td>
+        </tr>
+        <tr>
+          <td>下學期</td>
+          <td>8973</td><td>8245</td><td>8345</td><td>13379</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="fee-note">（其它金額細項請參閱住輔組網站）</p>
+    <p class="fee-note">住輔組宿舍簡介：<a href="https://www.osa.nchu.edu.tw/osa/dorm/intro_list.html" target="_blank">https://www.osa.nchu.edu.tw/osa/dorm/intro_list.html</a></p>
+    <div class="checkbox-row" style="margin-top:18px;">
+      <label><input type="checkbox" id="chk-fees"> 已確認瞭解宿舍各棟費用</label>
+    </div>
+    <button class="btn-next" onclick="requireCheck('chk-fees','page-checkout')">下一步</button>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 8: CHECKOUT RULES ===== -->
+<div id="page-checkout" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">宿舍退宿退費相關規定</h1>
+    <p style="font-size:18px;color:#0077b6;margin-bottom:10px;font-weight:bold;cursor:pointer;text-align:center;">宿舍退宿退費相關規定</p>
+    <p style="font-size:14px;color:#333;margin-bottom:14px;text-align:center;">學生宿舍退宿退費依照住宿輔導辦法第十四條辦理。</p>
+    <div class="checkbox-row">
+      <label><input type="checkbox" id="chk-checkout"> 已確認閱讀宿舍退宿退費相關規定</label>
+    </div>
+    <button class="btn-next" onclick="requireCheck('chk-checkout','page-summary')">下一步</button>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 9: SUMMARY / SUBMIT ===== -->
+<div id="page-summary" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <h1 class="page-title">申請資料、提醒</h1>
+    <table class="summary-table">
+      <tr><td></td><td>學號:7115095008</td></tr>
+      <tr><td></td><td>姓名:吳若瑄</td></tr>
+      <tr>
+        <td colspan="2">
+          <div class="reminder-box">
+            <strong>提醒：</strong>
+            1. 中籤者請於115年06月03日(三)13:30至115年06月05日(五)17：00請至「住輔組→學務資訊系統→學生宿舍→床位公告/確認住宿」查詢。<br><br>
+            2. 欲放棄床位者請務必於結果公告終止日後10日內【6月15日(含)下午5點前】前以紙本向服務中心提出申請，在規定時間內提出者無須繳費。
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div class="checkbox-row" style="margin-top:18px;">
+      <label><input type="checkbox" id="chk-read"> 已閱讀提醒事項</label><br>
+      <label><input type="checkbox" id="chk-confirm"> 確認申請宿舍床位抽籤</label>
+    </div>
+    <button class="btn-next" onclick="submitApp()" style="background:#0077b6;">送出申請資料</button>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<!-- ===== PAGE 10: SUCCESS ===== -->
+<div id="page-success" class="page">
+  <div class="header">學務資訊系統</div>
+  <div class="inner">
+    <div class="success-msg">
+      ✅ 申請資料已成功送出！<br><br>
+      <span style="font-size:15px;color:#333;">中籤結果將於 115年06月03日(三)13:30 起公告，請屆時登入查詢。</span>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-row">
+      <span>學生事務處</span><span>40227 台中市興大路145號</span><span>電話：(04) 2284-0223</span>
+    </div>
+    <div class="footer-bar">2017@學生事務處</div>
+  </div>
+</div>
+
+<script>
+  const VALID_ID = '7115095008';
+  const VALID_PW = 'F231023013';
+
+  function goTo(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function doLogin() {
+    const id = document.getElementById('inp-id').value.trim();
+    const pw = document.getElementById('inp-pw').value.trim();
+    const err = document.getElementById('err-msg');
+    if (id === VALID_ID && pw === VALID_PW) {
+      err.style.display = 'none';
+      goTo('page-enter');
+    } else {
+      err.style.display = 'block';
+    }
+  }
+
+  function requireCheck(checkId, nextPage) {
+    if (!document.getElementById(checkId).checked) {
+      alert('請先勾選確認選項後再繼續。');
+      return;
+    }
+    goTo(nextPage);
+  }
+
+  function submitApp() {
+    if (!document.getElementById('chk-read').checked || !document.getElementById('chk-confirm').checked) {
+      alert('請勾選所有確認選項後再送出。');
+      return;
+    }
+    goTo('page-success');
+  }
+
+  // Allow pressing Enter on password field
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('inp-pw').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+</script>
+</body>
+</html>
