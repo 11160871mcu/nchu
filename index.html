@@ -200,7 +200,7 @@
       <input class="login-input" id="inp-pw" type="password" placeholder="密碼 / Password">
       <div class="captcha-row">
         <span class="captcha-ok">✅ 成功!</span>
-        <div class="cf-logo">CLOUDFLARE<br>🔒 隱私・品味</div>
+        <div class="cf-logo">CLOUDFLARE<br></div>
       </div>
       <button class="btn-login" onclick="doLogin()">登入/ Login</button>
       <div class="err-msg" id="err-msg">學號或密碼錯誤，請重新輸入。</div>
@@ -270,11 +270,11 @@
         <div id="step-enter" class="step active-step">
           <div class="inner">
             <h1 class="page-title">宿舍床位抽籤/申請</h1>
-            <button class="btn-enter" onclick="goStep('step-notices')">進入</button>
-            <br><br>
-            <div style="font-size:16px; color:#2d6a4f; margin-top:10px;">
-              ✅ 申請資料已成功送出！<br>
-              <span style="font-size:14px; color:#333;">中籤結果將於 115年06月03日(三)13:30 起公告，請屆時登入查詢。</span>
+            <!--<button class="btn-enter" onclick="goStep('step-notices')">進入</button>-->
+            
+            <div style="font-size:16px; color:#333;line-height:2.5; text-align:center;">
+              申請時間已結束<br>
+              <span style="font-size:14px; color:#333;">開放時間：2026/05/25 09:00:00~2026/05/29 17:00:00</span>
             </div>
           </div>
         </div>
@@ -437,9 +437,9 @@
       <div id="section-announce" class="section-content">
         <div class="inner">
           <h1 class="page-title">床位公告/確認住宿</h1>
-          <div style="font-size:16px; color:#2d6a4f; line-height:2.5; text-align:center;">
-            ✅ 申請資料已成功送出！<br>
-            <span style="font-size:14px; color:#333;">中籤結果將於 115年06月03日(三)13:30 起公告，請屆時登入查詢。</span>
+          <div style="font-size:16px; color:#333; line-height:2.5; text-align:center;">
+            本階段未中籤，請在於下一階段公告時間確認是否有抽中。<br>
+            <span style="font-size:14px; color:#333;">You didn't get the bed in the first stage, please login the system in the second stage to confirm your status.</span>
           </div>
         </div>
       </div>
